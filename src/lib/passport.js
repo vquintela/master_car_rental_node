@@ -32,13 +32,13 @@ passport.use('local-signin', new LocalStrategy({
 }, async (req, email, password, done) => {
     const user = await User.findOne({ email: email });
     if (!user) {
-        return done(null, false);
+        return done(null, false, req.flash('message', 'Usuario no valido'));
     } else {
         const match = await user.comparePassword(password, user.password)
         if (!match) {
-            return done(null, false);
+            return done(null, false, req.flash('message', 'Contraseña incorrecta'));
         }
-        return done(null, user);
+        return done(null, user, req.flash('message', 'Bienvenido'));
     }
 }));
 

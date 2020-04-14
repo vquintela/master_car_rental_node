@@ -98,7 +98,7 @@ class Usuarios {
         container.insertBefore(div, app);
         setTimeout( () => {
             document.querySelector('.alert').remove();
-        }, 3000)
+        }, 1000)
     }
 
     static resetForm() {

@@ -11,11 +11,26 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signin', (req, res, next) => {
-    passport.authenticate('local-signin', {
-        successRedirect: '/profile',
-        failureRedirect: '/signin',
-        failureFlash: true
+    passport.authenticate('local-signin', (err, user, info) => { 
+        let mens = req.flash();
+        if (err) { 
+            return next(err); 
+        }
+        if (!user) { 
+            return res.json({ estado: false, message: mens.message }); 
+        }
+        req.logIn(user, (err) => {
+            if (err) { 
+              return next(err); 
+            }
+            return res.json({ estado: true, message: mens.message });
+        });
     })(req, res, next);
+    // passport.authenticate('local-signin', {
+    //     successRedirect: '/profile',
+    //     failureRedirect: '/signin',
+    //     failureFlash: true
+    // })(req, res, next);
 });
 
 router.post('/signup', (req, res, next) => {

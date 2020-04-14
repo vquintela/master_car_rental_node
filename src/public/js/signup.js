@@ -42,6 +42,6 @@ class AltaUsuario {
         container.insertBefore(div, app);
         setTimeout( () => {
             location.href = redirect;
-        }, 3000)
+        }, 1000)
     }
 }
