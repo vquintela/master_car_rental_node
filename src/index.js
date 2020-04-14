@@ -4,6 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const exphbs = require('express-handlebars');
 const passport = require('passport');
+const flash = require('connect-flash');
 
 //Inicialar Servidor
 const app = express();
@@ -28,6 +29,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
 }));
+app.use(flash());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,6 +39,7 @@ app.use(passport.session());
 //variables globales
 app.use((req, res, next) => {
     app.locals.user = req.user;
+    app.locals.message = req.flash('message');
     next();
 });
 

@@ -1,10 +1,10 @@
 class User {
-    constructor(nombre, apellido, email, password, rol) {
+    constructor(nombre, apellido, email, password, verificarPassword) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
-        this.rol = rol;
+        this.verificarPassword = verificarPassword;
     }
 }
 
@@ -14,8 +14,9 @@ class AltaUsuario {
         const apellido = document.getElementById('apellido').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        const verificarPassword = document.getElementById('verificar-password').value;
 
-        const user = new User(nombre, apellido, email, password);
+        const user = new User(nombre, apellido, email, password, verificarPassword);
 
         const usuarioJSON = JSON.stringify(user);
         const add = await fetch("/signup", {

@@ -10,7 +10,9 @@ passport.use('local-signup', new LocalStrategy({
 }, async (req, email, password, done) => {
     const user = await User.findOne({ 'email': email })
     if (user) {
-        return done(null, false);
+        return done(null, false, req.flash('message', 'Usuario ya registrado'));
+    } else if (req.body.password !== req.body.verificarPassword) {
+        return done(null, false, req.flash('message', 'Las password no coinciden'));
     } else {
         const { nombre, apellido } = req.body;
         const newUser = new User();
