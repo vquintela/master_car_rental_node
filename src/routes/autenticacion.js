@@ -14,7 +14,7 @@ router.post('/signin', (req, res, next) => {
     passport.authenticate('local-signin', {
         successRedirect: '/profile',
         failureRedirect: '/signin',
-        failureFlash: false
+        failureFlash: true
     })(req, res, next);
 });
 
@@ -31,7 +31,7 @@ router.post('/signup', (req, res, next) => {
             if (err) { 
               return next(err); 
             }
-          return res.json({ estado: true, message: 'Usuario registrado correctamente' });
+            return res.json({ estado: true, message: 'Usuario registrado correctamente' });
         });
     })(req, res, next);
 });

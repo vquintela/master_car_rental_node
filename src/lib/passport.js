@@ -33,11 +33,13 @@ passport.use('local-signin', new LocalStrategy({
     const user = await User.findOne({ email: email });
     if (!user) {
         return done(null, false);
+    } else {
+        const match = await user.comparePassword(password, user.password)
+        if (!match) {
+            return done(null, false);
+        }
+        return done(null, user);
     }
-    if (!user.comparePassword(password)) {
-        return done(null, false);
-    }
-    return done(null, user);
 }));
 
 passport.serializeUser((user, done) => {
