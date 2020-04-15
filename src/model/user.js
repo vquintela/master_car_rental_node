@@ -15,6 +15,11 @@ const userSchema = new Schema({
         type: String,
         enum: ['cliente', 'operador', 'administrador'],
         default: 'cliente'
+    },
+    numAut: String,
+    state: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -27,5 +32,9 @@ userSchema.methods.encryptPassword = async (password) => {
 userSchema.methods.comparePassword = async (password, userPassword) => {
     return await bcrypt.compare(password, userPassword);
 };
+
+userSchema.methods.genNum = () => {
+    return Math.floor(Math.random() * 100000) + 1;
+}
 
 module.exports = mongoose.model('user', userSchema);
