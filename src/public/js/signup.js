@@ -26,7 +26,7 @@ class AltaUsuario {
         });
         const res = JSON.parse(await add.text());
         if(res.estado){
-            AltaUsuario.showMessage(res.message, 'success', '/profile');
+            AltaUsuario.showMessage(res.message, 'success', '/signin');
         } else {
             AltaUsuario.showMessage(res.message, 'danger', '/signup');
         }
