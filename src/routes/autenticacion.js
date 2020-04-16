@@ -16,16 +16,16 @@ router.get('/verifica', async (req, res) => {
     const {email, id } = req.query;
     const emailUser = await User.findOne({email: email});
     if(!emailUser) {
-        return res.json({ estado: false, message: 'Usuario no registrado'});
+        res.render('auth/verificacion', {valor: false, mensaje: 'Email no registrado'});
     } else {
         if(emailUser.numAut === id) {
             newNum = emailUser.genNum();
             await emailUser.updateOne({state: true, numAut: newNum});
+            res.render('auth/verificacion', {valor: true, mensaje: `${emailUser.nombre}, ${emailUser.apellido}`});
         } else {
-            return res.json({ estado: false, message: 'Codigo Invalido'});
+            res.render('auth/verificacion', {valor: false, mensaje: 'Autenticación no valida'});;
         }
     }
-    res.send('Hola marolas' + email + id);
 })
 
 router.post('/signin', (req, res, next) => {
