@@ -29,4 +29,11 @@ router.post('/editar/:id', async (req, res) => {
     res.json({message: 'Usuario actualizado de forma correcta'});
 });
 
+router.put('/estado/:id', async (req, res) => {
+    const { id } = req.params;
+    const { state } = req.body;
+    await User.findByIdAndUpdate({_id: id}, { state });
+    res.json({message: 'Estado modificado'});
+})
+
 module.exports = router;

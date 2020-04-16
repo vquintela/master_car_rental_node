@@ -26,7 +26,10 @@ class Usuarios {
                         <td>${user.email}</td>
                         <td>${user.rol}</td>
                         <td><buton class="btn btn-danger" onclick="Usuarios.delete('${user._id}')";>Delete</buton>
-                        <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')";>Editar</buton></td>
+                        <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')";>Editar</buton>
+                        <buton class="btn btn-${user.state ? "alert" : "success"}" onclick="Usuarios.estado('${user._id}', ${user.state})";>
+                        ${user.state ? "Activo" : "Inactivo"}
+                        </buton></td>
                     </tr>
                 </tbody>
             `;
@@ -59,6 +62,7 @@ class Usuarios {
                 </div>
                 <div class="form-group">
                     <select name="rol" id="rol" class="form-control">
+                        <option>${usuario.rol}</option>
                         <option>administrador</option>
                         <option>operador</option>
                         <option>cliente</option>
@@ -86,6 +90,20 @@ class Usuarios {
         Usuarios.showMessage(datotexto.message, 'success');
         Usuarios.obtenerUsuarios();
         Usuarios.resetForm();
+    }
+
+    static async estado(id, state){
+        const body = { state }
+        body.state = !state
+        const userJSON = JSON.stringify(body);
+        const add = await fetch("/users/estado/" + id, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'}, 
+            body: userJSON
+        });
+        const datotexto = JSON.parse(await add.text());
+        Usuarios.showMessage(datotexto.message, 'success');
+        Usuarios.obtenerUsuarios();
     }
 
     static showMessage(message, cssClass) {

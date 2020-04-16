@@ -19,7 +19,8 @@ const userSchema = new Schema({
     numAut: String,
     state: {
         type: Boolean,
-        default: false
+        default: false,
+        required: true
     }
 });
 
