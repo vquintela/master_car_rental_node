@@ -19,7 +19,7 @@ router.get('/verifica', async (req, res) => {
         res.render('auth/verificacion', {valor: false, mensaje: 'Email no registrado'});
     } else {
         if(emailUser.numAut === id) {
-            newNum = emailUser.genNum();
+            newNum = emailUser.genPass();
             await emailUser.updateOne({state: true, numAut: newNum});
             res.render('auth/verificacion', {valor: true, mensaje: `${emailUser.nombre}, ${emailUser.apellido}`});
         } else {
@@ -57,12 +57,26 @@ router.post('/signup', async (req, res) => {
     } else {
         const newUser = new User({nombre, apellido, email, password});
         newUser.password = await newUser.encryptPassword(password);
-        newUser.numAut = newUser.genNum();
+        newUser.numAut = await newUser.genPass();
         await newUser.save();
-        mailer(newUser.email ,newUser.nombre, newUser.apellido, newUser.numAut);
+        mailer.signup(newUser.email ,newUser.nombre, newUser.apellido, newUser.numAut);
         return res.json({estado: true, message: 'Usuario Registrado, verifique su email para terminar'});
     }
 });
+
+router.post('/renew', async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({email: email});
+    if(user) {
+        const pass = user.genPass();
+        mailer.renew(user.email, user.nombre, user.apellido, pass);
+        const password = await user.encryptPassword(pass);
+        await user.updateOne({ password: password });
+        res.json({estado: true, message: 'Se le a enviado a su email la nueva password'});
+    } else {
+        res.json({estado: false, message: 'Usuario no Registrado, registrese por favor'});
+    }
+})
 
 router.get('/profile', (req,res) => {
     res.render('profile');

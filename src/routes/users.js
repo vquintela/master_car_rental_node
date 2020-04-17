@@ -36,4 +36,25 @@ router.put('/estado/:id', async (req, res) => {
     res.json({message: 'Estado modificado'});
 })
 
+router.get('/newpass', async (req, res) => {
+    res.render('users/newpass');
+})
+
+router.post('/newpass/:id', async (req, res) => {
+    const { id } = req.params;
+    const { passwordActual, nuevaPass, repNuevaPass} = req.body;
+    if(nuevaPass === repNuevaPass){
+        const user = await User.findById(id);
+        if(user.comparePassword(passwordActual, user.password)) {
+            const password = await user.encryptPassword(nuevaPass);
+            await user.updateOne({password: password})
+            res.json({message: 'Password cambiada'})
+        } else {
+            res.json({message: 'La password ingresada no es correcta'})
+        }
+    } else{
+        res.json({message: 'Las password no coinciden'})
+    }
+})
+
 module.exports = router;

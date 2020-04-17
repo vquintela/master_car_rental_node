@@ -18,6 +18,26 @@ class IngUsuario {
         }
     }
 
+    static async renew(){
+        const user = {};
+        user.email = document.getElementById('email').value;
+        if(user.email === "") {
+            return IngUsuario.showMessage('Ingrese el email', 'danger', '/signin');
+        }
+        const userJSON = JSON.stringify(user);
+        const add = await fetch('/renew', {
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: userJSON
+        })
+        const res = JSON.parse(await add.text());
+        if(res.estado){
+            IngUsuario.showMessage(res.message, 'success', '/signin');
+        } else {
+            IngUsuario.showMessage(res.message, 'danger', '/signin');
+        }
+    }
+
     static showMessage(message, cssClass, redirect) {
         const div = document.createElement('div');
         div.className = `alert alert-${cssClass} mt-3`;

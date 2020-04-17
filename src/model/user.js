@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const generate = require('generate-password');
 
 const { Schema } = mongoose;
 
@@ -34,8 +35,11 @@ userSchema.methods.comparePassword = async (password, userPassword) => {
     return await bcrypt.compare(password, userPassword);
 };
 
-userSchema.methods.genNum = () => {
-    return Math.floor(Math.random() * 100000) + 1;
+userSchema.methods.genPass = () => {
+    return generate.generate({
+        length: 10,
+        numbers: true
+    })
 }
 
 module.exports = mongoose.model('user', userSchema);
