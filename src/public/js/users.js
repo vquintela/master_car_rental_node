@@ -1,6 +1,7 @@
 class Usuarios {
     static async obtenerUsuarios() {
         const rol = document.getElementById('rol-buscar').value;
+        const estado = JSON.parse(document.getElementById('estado-buscar').value);
         document.getElementById('user-list').innerHTML = `
                     <thead class="thead-dark">
                       <tr>
@@ -17,7 +18,9 @@ class Usuarios {
         let users = JSON.parse(await userJSON.text());
         let i = 0
         if(rol !== 'todos') {
-            users = users.filter(user => user.rol === rol);
+            users = users.filter(user => user.rol === rol && user.state === estado)
+        } else {
+            users = users.filter(user => user.state === estado)
         }
         users.map(user => {
             i += 1
