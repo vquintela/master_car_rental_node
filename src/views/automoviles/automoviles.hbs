@@ -1,30 +1,30 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="#">EDICION USUARIOS</a>
+        <a class="navbar-brand" href="#">EDICION AUTOMOVILES</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <form class="form-inline my-2 my-lg-0 ml-auto">
-                <select name="rol" id="estado-buscar" class="form-control mr-sm-2">
-                    <option value="true">Activos</option>
-                    <option value="false">Bloqueados</option>
-                </select>
+                <input class="btn btn-primary mr-2" value="Ingresar Automovil" onclick="Automovil.ingresar();" readonly/>
                 <select name="rol" id="rol-buscar" class="form-control mr-sm-2">
                     <option>todos</option>
-                    <option>administrador</option>
-                    <option>operador</option>
-                    <option>cliente</option>
+                    <option>ford</option>
+                    <option>fiat</option>
+                    <option>volkswagen</option>
+                    <option>chevrolet</option>
                 </select>
-                <input class="btn btn-success" value="Buscar" onclick="Usuarios.obtenerUsuarios();" readonly/>
+                <input class="btn btn-success" value="Buscar" onclick="#" readonly/>
             </form>
         </div>
     </div>
 </nav>
 <div class="container" id="contenedor">
     <div class="row pt-5" id="App">
-        <div class="col-md-12 text-center" id="insertar"></div>
+        <div class="col-md-12 text-center" id="insertar">
+            {{!-- <table class="table" id="user-list"></table> --}}
+        </div>
     </div>
 </div>
-<script type="module" src="js/users.js"></script>
+<script type="module" src="js/automoviles.js"></script>

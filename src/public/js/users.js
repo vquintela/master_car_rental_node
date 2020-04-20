@@ -4,7 +4,8 @@ window.Usuarios = class Usuarios {
     static async obtenerUsuarios() {
         const rol = document.getElementById('rol-buscar').value;
         const estado = JSON.parse(document.getElementById('estado-buscar').value);
-        document.getElementById('user-list').innerHTML = `
+        document.getElementById('insertar').innerHTML = `
+                <table class="table" id="insertar-filas">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">ID</th>
@@ -26,21 +27,22 @@ window.Usuarios = class Usuarios {
         }
         users.map(user => {
             i += 1
-            document.getElementById('user-list').innerHTML += `
-                <tbody >
-                    <tr>
-                        <th scope="row">${i}</th>
-                        <td>${user.nombre}</td>
-                        <td>${user.apellido}</td>
-                        <td>${user.email}</td>
-                        <td>${user.rol}</td>
-                        <td><buton class="btn btn-danger" onclick="Usuarios.delete('${user._id}')">Delete</buton>
-                        <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')">Editar</buton>
-                        <buton class="btn btn-${user.state ? "alert" : "success"}" onclick="Usuarios.estado('${user._id}', ${user.state})">
-                        ${user.state ? "Activo" : "Inactivo"}
-                        </buton></td>
-                    </tr>
-                </tbody>
+            document.getElementById('insertar-filas').innerHTML += `
+                    <tbody >
+                        <tr>
+                            <th scope="row">${i}</th>
+                            <td>${user.nombre}</td>
+                            <td>${user.apellido}</td>
+                            <td>${user.email}</td>
+                            <td>${user.rol}</td>
+                            <td><buton class="btn btn-danger" onclick="Usuarios.delete('${user._id}')">Delete</buton>
+                            <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')">Editar</buton>
+                            <buton class="btn btn-${user.state ? "alert" : "success"}" onclick="Usuarios.estado('${user._id}', ${user.state})">
+                            ${user.state ? "Activo" : "Inactivo"}
+                            </buton></td>
+                        </tr>
+                    </tbody>
+                </table>
             `;
         })
     }
@@ -55,30 +57,34 @@ window.Usuarios = class Usuarios {
     static async update(id) {
         const user = await fetch("/users/editar/" + id, {method: 'GET'});
         let usuario = JSON.parse(await user.text());
-        document.getElementById('product-form').innerHTML =`
-            <div class="card-header" id="formulario-titulo">
-                <h4>Editar Usuario</h4>
+        document.getElementById('insertar').innerHTML =`
+            <div class="row justify-content-md-center"
+                <div class="card col-md-4" id="product-form">
+                    <form class="card-body col-md-4" id="formulario">
+                        <div class="card-header" id="formulario-titulo">
+                            <h4>Editar Usuario</h4>
+                        </div>
+                        <div class="form-group mt-4">
+                            <input type="text" id="nombre" value="${usuario.nombre}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="apellido" value="${usuario.apellido}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="email" value="${usuario.email}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <select name="rol" id="rol" class="form-control">
+                                <option>${usuario.rol}</option>
+                                <option>administrador</option>
+                                <option>operador</option>
+                                <option>cliente</option>
+                            </select>
+                        </div>
+                        <input value="Editar" class="btn btn-primary btn-block" onclick="Usuarios.editar('${usuario._id}');">
+                    </form>
+                </div>
             </div>
-            <form class="card-body" id="formulario">
-                <div class="form-group">
-                    <input type="text" id="nombre" value="${usuario.nombre}" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="apellido" value="${usuario.apellido}" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="email" value="${usuario.email}" class="form-control">
-                </div>
-                <div class="form-group">
-                    <select name="rol" id="rol" class="form-control">
-                        <option>${usuario.rol}</option>
-                        <option>administrador</option>
-                        <option>operador</option>
-                        <option>cliente</option>
-                    </select>
-                </div>
-                <input value="Editar" class="btn btn-primary btn-block" onclick="Usuarios.editar('${usuario._id}');">
-            </form>
         `;
     }
 
