@@ -14,7 +14,7 @@ router.get('/obtener', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
     const { id } = req.params;
     await User.findByIdAndDelete(id);
-    res.json({message: 'Usuario eliminado de forma correcta'});
+    res.json({message: 'Usuario eliminado de forma correcta', css: 'success', redirect: 'remove'});
 });
 
 router.get('/editar/:id', async (req, res) => {
@@ -26,14 +26,14 @@ router.get('/editar/:id', async (req, res) => {
 router.post('/editar/:id', async (req, res) => {
     const { nombre, apellido, email, rol } = req.body;
     await User.findByIdAndUpdate({_id: req.params.id}, { nombre, apellido, email, rol });
-    res.json({message: 'Usuario actualizado de forma correcta'});
+    res.json({message: 'Usuario actualizado de forma correcta', css: 'success', redirect: 'remove'});
 });
 
 router.put('/estado/:id', async (req, res) => {
     const { id } = req.params;
     const { state } = req.body;
     await User.findByIdAndUpdate({_id: id}, { state });
-    res.json({message: 'Estado modificado'});
+    res.json({message: 'Estado modificado', css: 'success', redirect: 'remove'});
 })
 
 router.get('/newpass', async (req, res) => {
@@ -45,15 +45,16 @@ router.post('/newpass/:id', async (req, res) => {
     const { passwordActual, nuevaPass, repNuevaPass} = req.body;
     if(nuevaPass === repNuevaPass){
         const user = await User.findById(id);
-        if(user.comparePassword(passwordActual, user.password)) {
+        const pass = await user.comparePassword(passwordActual, user.password)
+        if(pass) {
             const password = await user.encryptPassword(nuevaPass);
             await user.updateOne({password: password})
-            res.json({message: 'Password cambiada'})
+            res.json({message: 'Password cambiada', css: 'success', redirect: '/profile'})
         } else {
-            res.json({message: 'La password ingresada no es correcta'})
+            res.json({message: 'La password ingresada no es correcta', css: 'danger', redirect: 'remove'})
         }
     } else{
-        res.json({message: 'Las password no coinciden'})
+        res.json({message: 'Las password no coinciden',css: 'danger', redirect: 'remove'})
     }
 })
 

@@ -1,3 +1,5 @@
+import { message } from './message.js';
+
 class User {
     constructor(nombre, apellido, email, password, verificarPassword) {
         this.nombre = nombre;
@@ -8,7 +10,7 @@ class User {
     }
 }
 
-class AltaUsuario {
+window.AltaUsuario = class AltaUsuario {
     static async crearUsuario() {
         const nombre = document.getElementById('nombre').value;
         const apellido = document.getElementById('apellido').value;
@@ -25,23 +27,6 @@ class AltaUsuario {
             body: usuarioJSON
         });
         const res = JSON.parse(await add.text());
-        if(res.estado){
-            AltaUsuario.showMessage(res.message, 'success', '/signin');
-        } else {
-            AltaUsuario.showMessage(res.message, 'danger', '/signup');
-        }
-    }
-
-    static showMessage(message, cssClass, redirect) {
-        const div = document.createElement('div');
-        div.className = `alert alert-${cssClass} mt-3`;
-        div.appendChild(document.createTextNode(message));
-        //mostrando en el DOM
-        const container = document.getElementById('contenedor');
-        const app = document.querySelector('#App');
-        container.insertBefore(div, app);
-        setTimeout( () => {
-            location.href = redirect;
-        }, 1000)
+        message.showMessage(res.message, res.css, res.redirect);
     }
 }

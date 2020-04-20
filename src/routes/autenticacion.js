@@ -35,13 +35,13 @@ router.post('/signin', (req, res, next) => {
             return next(err); 
         }
         if (!user) { 
-            return res.json({ estado: false, message: mens.message }); 
+            return res.json({message: mens.message, css: 'danger', redirect: '/signin'}); 
         }
         req.logIn(user, (err) => {
             if (err) { 
               return next(err); 
             }
-            return res.json({ estado: true, message: mens.message });
+            return res.json({message: mens.message, css: 'success', redirect: '/profile'});
         });
     })(req, res, next);
 });
@@ -49,18 +49,18 @@ router.post('/signin', (req, res, next) => {
 router.post('/signup', async (req, res) => {
     const {nombre, apellido, email, password, verificarPassword} = req.body;
     if(password !== verificarPassword) {
-        return res.json({ estado: false, message: 'Las contraseñas no coinciden'});
+        return res.json({message: 'Las contraseñas no coinciden', css: 'danger', redirect: '/signup'});
     }
     const emailUser = await User.findOne({email: email});
     if(emailUser) {
-        return res.json({ estado: false, message: 'Email en uso, ingrese otro'});
+        return res.json({message: 'Email en uso, ingrese otro', css: 'danger', redirect: '/signup'});
     } else {
         const newUser = new User({nombre, apellido, email, password});
         newUser.password = await newUser.encryptPassword(password);
         newUser.numAut = await newUser.genPass();
         await newUser.save();
         mailer.signup(newUser.email ,newUser.nombre, newUser.apellido, newUser.numAut);
-        return res.json({estado: true, message: 'Usuario Registrado, verifique su email para terminar'});
+        return res.json({message: 'Usuario Registrado, verifique su email para terminar', css: 'success', redirect: '/signin'});
     }
 });
 
@@ -72,9 +72,9 @@ router.post('/renew', async (req, res) => {
         mailer.renew(user.email, user.nombre, user.apellido, pass);
         const password = await user.encryptPassword(pass);
         await user.updateOne({ password: password });
-        res.json({estado: true, message: 'Se le a enviado a su email la nueva password'});
+        res.json({message: 'Se le a enviado a su email la nueva password', css: 'success', redirect: '/signin'});
     } else {
-        res.json({estado: false, message: 'Usuario no Registrado, registrese por favor'});
+        res.json({message: 'Usuario no Registrado, registrese por favor', css: 'danger', redirect: '/signup'});
     }
 })
 

@@ -1,4 +1,6 @@
-class IngUsuario {
+import { message } from './message.js';
+
+window.IngUsuario = class IngUsuario {
     static async ingresar() {
         const user = {};
         user.email = document.getElementById('email').value;
@@ -11,18 +13,14 @@ class IngUsuario {
             body: usuarioJSON
         });
         const res = JSON.parse(await add.text());
-        if(res.estado){
-            IngUsuario.showMessage(res.message, 'success', '/profile');
-        } else {
-            IngUsuario.showMessage(res.message, 'danger', '/signin');
-        }
+        message.showMessage(res.message, res.css, res.redirect);
     }
 
     static async renew(){
         const user = {};
         user.email = document.getElementById('email').value;
         if(user.email === "") {
-            return IngUsuario.showMessage('Ingrese el email', 'danger', '/signin');
+            return message.showMessage('Ingrese el email', 'danger', '/signin');
         }
         const userJSON = JSON.stringify(user);
         const add = await fetch('/renew', {
@@ -31,24 +29,7 @@ class IngUsuario {
             body: userJSON
         })
         const res = JSON.parse(await add.text());
-        if(res.estado){
-            IngUsuario.showMessage(res.message, 'success', '/signin');
-        } else {
-            IngUsuario.showMessage(res.message, 'danger', '/signin');
-        }
-    }
-
-    static showMessage(message, cssClass, redirect) {
-        const div = document.createElement('div');
-        div.className = `alert alert-${cssClass} mt-3`;
-        div.appendChild(document.createTextNode(message));
-        //mostrando en el DOM
-        const container = document.getElementById('contenedor');
-        const app = document.querySelector('#App');
-        container.insertBefore(div, app);
-        setTimeout( () => {
-            location.href = redirect;
-        }, 1000)
+        message.showMessage(res.message, res.css, res.redirect);
     }
 
     static inicialar() {

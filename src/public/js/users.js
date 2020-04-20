@@ -1,4 +1,6 @@
-class Usuarios {
+import { message } from './message.js';
+
+window.Usuarios = class Usuarios {
     static async obtenerUsuarios() {
         const rol = document.getElementById('rol-buscar').value;
         const estado = JSON.parse(document.getElementById('estado-buscar').value);
@@ -32,9 +34,9 @@ class Usuarios {
                         <td>${user.apellido}</td>
                         <td>${user.email}</td>
                         <td>${user.rol}</td>
-                        <td><buton class="btn btn-danger" onclick="Usuarios.delete('${user._id}')";>Delete</buton>
-                        <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')";>Editar</buton>
-                        <buton class="btn btn-${user.state ? "alert" : "success"}" onclick="Usuarios.estado('${user._id}', ${user.state})";>
+                        <td><buton class="btn btn-danger" onclick="Usuarios.delete('${user._id}')">Delete</buton>
+                        <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')">Editar</buton>
+                        <buton class="btn btn-${user.state ? "alert" : "success"}" onclick="Usuarios.estado('${user._id}', ${user.state})">
                         ${user.state ? "Activo" : "Inactivo"}
                         </buton></td>
                     </tr>
@@ -46,7 +48,7 @@ class Usuarios {
     static async delete(id) {
         const user = await fetch("/users/delete/" + id, {method: 'DELETE'});
         const datotexto = JSON.parse(await user.text());
-        Usuarios.showMessage(datotexto.message, 'success');
+        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
         Usuarios.obtenerUsuarios();
     }
 
@@ -94,9 +96,9 @@ class Usuarios {
             body: userJSON
         });
         const datotexto = JSON.parse(await add.text());
-        Usuarios.showMessage(datotexto.message, 'success');
+        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
         Usuarios.obtenerUsuarios();
-        Usuarios.resetForm();
+        message.resetForm();
     }
 
     static async estado(id, state){
@@ -109,26 +111,8 @@ class Usuarios {
             body: userJSON
         });
         const datotexto = JSON.parse(await add.text());
-        Usuarios.showMessage(datotexto.message, 'success');
+        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
         Usuarios.obtenerUsuarios();
-    }
-
-    static showMessage(message, cssClass) {
-        const div = document.createElement('div');
-        div.className = `alert alert-${cssClass} mt-3`;
-        div.appendChild(document.createTextNode(message));
-        //mostrando en el DOM
-        const container = document.getElementById('contenedor');
-        const app = document.querySelector('#App');
-        container.insertBefore(div, app);
-        setTimeout( () => {
-            document.querySelector('.alert').remove();
-        }, 1000)
-    }
-
-    static resetForm() {
-        document.getElementById('formulario-titulo').remove();
-        document.getElementById('formulario').remove();
     }
 }
 
