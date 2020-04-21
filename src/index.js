@@ -5,6 +5,7 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const passport = require('passport');
 const flash = require('connect-flash');
+const multer = require('multer');
 
 //Inicialar Servidor
 const app = express();
@@ -22,6 +23,7 @@ app.engine('.hbs', exphbs({
     helpers: require('./lib/handlebars')
 }));
 app.set('view engine', '.hbs');
+app.use(multer({dest: path.join(__dirname, 'public/img')}).single('image'));
 
 //midlewares
 app.use(session({

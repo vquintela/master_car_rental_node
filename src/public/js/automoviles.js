@@ -30,7 +30,7 @@ window.Automovil = class Automovil {
                                 <option>chevrolet</option>
                             </select>
                         </div>
-                        <input value="Editar" class="btn btn-primary" onclick="Automovil.insertar();">
+                        <input value="Ingresar" class="btn btn-primary" onclick="Automovil.insertar();" readonly>
                     </form>
                 </div>
                 <div class="col-md-4">
@@ -49,9 +49,8 @@ window.Automovil = class Automovil {
                             <input type="text" id="modelo" placeholder="Modelo" class="form-control">
                         </div>
                         <div class="form-group">
-                            <input type="text" id="imagen" placeholder="Imagen" class="form-control">
+                            <input type="file" id="imagen" class="form-control-file">
                         </div>
-                        <input value="Subir Imagen" class="btn btn-secondary" onclick="#">
                     </form>
                 </div>
             </div>
@@ -59,22 +58,20 @@ window.Automovil = class Automovil {
     }
 
     static async insertar() {
-        const automovil = {};
-        automovil.patente = document.getElementById('patente').value;
-        automovil.pasajeros = document.getElementById('pasajeros').value;
-        automovil.puertas = document.getElementById('puertas').value;
-        automovil.precio = document.getElementById('precio').value;
-        automovil.marca = document.getElementById('marca').value;
-        automovil.transmicion = document.getElementById('transmicion').value;
-        automovil.descripcion = document.getElementById('descripcion').value;
-        automovil.modelo = document.getElementById('modelo').value;
-        automovil.imagen = document.getElementById('imagen').value;
+        const formData = new FormData();
+        formData.append('image', document.getElementById('imagen').files[0]);
+        formData.append('modelo', document.getElementById('modelo').value)
+        formData.append('descripcion', document.getElementById('descripcion').value)
+        formData.append('transmicion', document.getElementById('transmicion').value)
+        formData.append('marca', document.getElementById('marca').value)
+        formData.append('precio', document.getElementById('precio').value)
+        formData.append('puertas', document.getElementById('puertas').value)
+        formData.append('pasajeros', document.getElementById('pasajeros').value)
+        formData.append('patente', document.getElementById('patente').value)
 
-        const automovilJSON = JSON.stringify(automovil);
         const text = await fetch('/automoviles/insertar', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'}, 
-            body: automovilJSON
+            body: formData
         })
         const mensaje = JSON.parse(await text.text());
         message.showMessage(mensaje.message, mensaje.css, mensaje.redirect);
