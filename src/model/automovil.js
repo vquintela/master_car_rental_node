@@ -37,6 +37,7 @@ const automovilSchema = new Schema({
     },
     imagen: {
         type: String,
+        default: 'sinimagen'
     },
     tecnico: {
         type: Boolean,
