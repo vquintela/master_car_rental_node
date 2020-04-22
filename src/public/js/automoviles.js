@@ -170,3 +170,5 @@ window.Automovil = class Automovil {
         Automovil.obtener();
     }
 }
+
+Automovil.obtener();
