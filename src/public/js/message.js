@@ -22,4 +22,32 @@ class message {
     }
 }
 
-export { message };
+class Modal {
+    constructor(texto) {
+        this.texto = texto || '¿Estas seguro de esto?'
+        this._modal();
+    }
+
+    _modal() {
+        let mascara = document.getElementById('lamascara');
+        mascara.style.display = "block";
+        document.querySelector('#panelResultados').innerHTML = this.texto;
+    }
+
+    confirm() {
+        return new Promise((resolve, reject) => {
+            const btnCerrar = document.getElementById('cerrarModal');
+            btnCerrar.addEventListener("click", () => {
+                document.getElementById('lamascara').style.display = "none";
+                resolve(false);
+            });
+            const btnAceptar = document.getElementById('aceptarModal');
+            btnAceptar.addEventListener("click", () => {
+                document.getElementById('lamascara').style.display = "none";
+                resolve(true);
+            });
+        });
+    }
+}
+
+export { message, Modal };

@@ -1,4 +1,4 @@
-import { message } from './message.js';
+import { message, Modal } from './message.js';
 
 window.Automovil = class Automovil {
     static ingresar(auto) {
@@ -143,31 +143,39 @@ window.Automovil = class Automovil {
     }
 
     static async delete(id, image) {
-        const data = {}
-        data.imagen = image
-        const dataJSON = JSON.stringify(data);
-        const resp = await fetch("/automoviles/delete/" + id, {
-            method: 'POST', 
-            headers: {'Content-Type': 'application/json'}, 
-            body: dataJSON
-        });
-        const datotexto = JSON.parse(await resp.text());
-        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
-        Automovil.obtener();
+        const modal = new Modal('¿Seguro desea eliminar este vehiculo?')
+        const acept = await modal.confirm();
+        if (acept) {
+            const data = {}
+            data.imagen = image
+            const dataJSON = JSON.stringify(data);
+            const resp = await fetch("/automoviles/delete/" + id, {
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: dataJSON
+            });
+            const datotexto = JSON.parse(await resp.text());
+            message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
+            Automovil.obtener();
+        }
     }
 
     static async estado(id, tecnico) {
-        const body = {}
-        body.tecnico = !tecnico
-        const autoJSON = JSON.stringify(body);
-        const add = await fetch("/automoviles/estado/" + id, {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'}, 
-            body: autoJSON
-        });
-        const datotexto = JSON.parse(await add.text());
-        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
-        Automovil.obtener();
+        const modal = new Modal('¿Seguro desea cambiar el estado de este vehiculo?')
+        const acept = await modal.confirm();
+        if (acept) {
+            const body = {}
+            body.tecnico = !tecnico
+            const autoJSON = JSON.stringify(body);
+            const add = await fetch("/automoviles/estado/" + id, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'}, 
+                body: autoJSON
+            });
+            const datotexto = JSON.parse(await add.text());
+            message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
+            Automovil.obtener();
+        }
     }
 }
 

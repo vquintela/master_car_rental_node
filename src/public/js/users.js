@@ -1,4 +1,4 @@
-import { message } from './message.js';
+import { message, Modal } from './message.js';
 
 window.Usuarios = class Usuarios {
     static async obtenerUsuarios() {
@@ -48,10 +48,14 @@ window.Usuarios = class Usuarios {
     }
 
     static async delete(id) {
-        const user = await fetch("/users/delete/" + id, {method: 'DELETE'});
-        const datotexto = JSON.parse(await user.text());
-        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
-        Usuarios.obtenerUsuarios();
+        const modal = new Modal('¿Seguro desea eliminar este usuario?')
+        const acept = await modal.confirm();
+        if (acept) {
+            const user = await fetch("/users/delete/" + id, {method: 'DELETE'});
+            const datotexto = JSON.parse(await user.text());
+            message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
+            Usuarios.obtenerUsuarios();
+        }
     }
 
     static async update(id) {
@@ -107,18 +111,22 @@ window.Usuarios = class Usuarios {
         message.resetForm();
     }
 
-    static async estado(id, state){
-        const body = { state }
-        body.state = !state
-        const userJSON = JSON.stringify(body);
-        const add = await fetch("/users/estado/" + id, {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'}, 
-            body: userJSON
-        });
-        const datotexto = JSON.parse(await add.text());
-        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
-        Usuarios.obtenerUsuarios();
+    static async estado(id, state) {
+        const modal = new Modal('¿Seguro desea cambiar el estado?')
+        const acept = await modal.confirm();
+        if (acept) {
+            const body = { state }
+            body.state = !state
+            const userJSON = JSON.stringify(body);
+            const add = await fetch("/users/estado/" + id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: userJSON
+            });
+            const datotexto = JSON.parse(await add.text());
+            message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
+            Usuarios.obtenerUsuarios();
+        }
     }
 }
 
