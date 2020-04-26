@@ -116,7 +116,7 @@ window.Automovil = class Automovil {
             document.getElementById('insertar-filas').innerHTML += `
                     <tbody >
                         <tr>
-                            <th scope="row">${i}</th>
+                            <td scope="row">${i}</td>
                             <td>${automovil.patente}</td>
                             <td>${automovil.pasajeros}</td>
                             <td>${automovil.puertas}</td>
@@ -124,10 +124,10 @@ window.Automovil = class Automovil {
                             <td>${automovil.marca}</td>
                             <td>${automovil.transmicion}</td>
                             <td>${automovil.modelo}</td>
-                            <td><buton class="btn btn-danger" onclick="Automovil.delete('${automovil._id}', '${automovil.imagen}')">Delete</buton>
-                            <buton class="btn btn-primary" onclick="Automovil.editar('${automovil._id}')">Editar</buton>
-                            <buton class="btn btn-${automovil.tecnico ? "alert" : "success"}" onclick="Automovil.estado('${automovil._id}', ${automovil.tecnico})">
-                            ${automovil.tecnico ? "Activo" : "Reparacion"}
+                            <td><buton class="btn btn-danger" onclick="Automovil.delete('${automovil._id}', '${automovil.imagen}')"><i class="far fa-trash-alt"></i></buton>
+                            <buton class="btn btn-primary" onclick="Automovil.editar('${automovil._id}')"><i class="far fa-edit"></i></buton>
+                            <buton class="btn btn-${automovil.tecnico ? "success" : "danger"}" onclick="Automovil.estado('${automovil._id}', ${automovil.tecnico})">
+                            ${automovil.tecnico ? '<i class="fas fa-car"></i>' : '<i class="fas fa-wrench"></i>'}
                             </buton></td>
                         </tr>
                     </tbody>
@@ -137,13 +137,17 @@ window.Automovil = class Automovil {
     }
 
     static async editar(id) {
-        const automovil = await fetch('/automoviles/editar/' + id, {method: 'GET'});
-        const auto = JSON.parse(await automovil.text());
-        Automovil.ingresar(auto)
+        const modal = new Modal('EDITAR AUTOMOVIL', '¿Seguro desea editar este vehiculo?')
+        const acept = await modal.confirm();
+        if (acept) {
+            const automovil = await fetch('/automoviles/editar/' + id, {method: 'GET'});
+            const auto = JSON.parse(await automovil.text());
+            Automovil.ingresar(auto)
+        }
     }
 
     static async delete(id, image) {
-        const modal = new Modal('¿Seguro desea eliminar este vehiculo?')
+        const modal = new Modal('ELIMINAR AUTOMOVIL', '¿Seguro desea eliminar este vehiculo?')
         const acept = await modal.confirm();
         if (acept) {
             const data = {}
@@ -161,7 +165,7 @@ window.Automovil = class Automovil {
     }
 
     static async estado(id, tecnico) {
-        const modal = new Modal('¿Seguro desea cambiar el estado de este vehiculo?')
+        const modal = new Modal('ESTADO AUTOMOVIL', '¿Seguro desea cambiar el estado de este vehiculo?')
         const acept = await modal.confirm();
         if (acept) {
             const body = {}

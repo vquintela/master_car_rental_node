@@ -23,7 +23,8 @@ class message {
 }
 
 class Modal {
-    constructor(texto) {
+    constructor(titulo, texto) {
+        this.titulo = titulo || 'Confirmar Edicion'
         this.texto = texto || '¿Estas seguro de esto?'
         this._modal();
     }
@@ -31,6 +32,7 @@ class Modal {
     _modal() {
         let mascara = document.getElementById('lamascara');
         mascara.style.display = "block";
+        document.getElementById('titulo-modal').innerHTML = this.titulo;
         document.querySelector('#panelResultados').innerHTML = this.texto;
     }
 

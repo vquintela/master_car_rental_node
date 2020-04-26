@@ -30,15 +30,15 @@ window.Usuarios = class Usuarios {
             document.getElementById('insertar-filas').innerHTML += `
                     <tbody >
                         <tr>
-                            <th scope="row">${i}</th>
+                            <td scope="row">${i}</td>
                             <td>${user.nombre}</td>
                             <td>${user.apellido}</td>
                             <td>${user.email}</td>
                             <td>${user.rol}</td>
-                            <td><buton class="btn btn-danger" onclick="Usuarios.delete('${user._id}')">Delete</buton>
-                            <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')">Editar</buton>
-                            <buton class="btn btn-${user.state ? "alert" : "success"}" onclick="Usuarios.estado('${user._id}', ${user.state})">
-                            ${user.state ? "Activo" : "Inactivo"}
+                            <td><buton class="btn btn-danger" onclick="Usuarios.delete('${user._id}')"><i class="far fa-trash-alt"></i></buton>
+                            <buton class="btn btn-primary" onclick="Usuarios.update('${user._id}')"><i class="far fa-edit"></i></buton>
+                            <buton class="btn btn-${user.state ? "success" : "danger"}" onclick="Usuarios.estado('${user._id}', ${user.state})">
+                            ${user.state ? '<i class="fas fa-user-slash"></i>' : '<i class="far fa-user"></i>'}
                             </buton></td>
                         </tr>
                     </tbody>
@@ -48,7 +48,7 @@ window.Usuarios = class Usuarios {
     }
 
     static async delete(id) {
-        const modal = new Modal('¿Seguro desea eliminar este usuario?')
+        const modal = new Modal('ELIMINAR USUARIO' ,'¿Seguro desea eliminar este usuario?')
         const acept = await modal.confirm();
         if (acept) {
             const user = await fetch("/users/delete/" + id, {method: 'DELETE'});
@@ -59,8 +59,13 @@ window.Usuarios = class Usuarios {
     }
 
     static async update(id) {
-        const user = await fetch("/users/editar/" + id, {method: 'GET'});
-        let usuario = JSON.parse(await user.text());
+        const modal = new Modal('EDITAR USUARIO', '¿Seguro desea editar este usuario?')
+        const acept = await modal.confirm();
+        let usuario;
+        if (acept) {
+            let user = await fetch("/users/editar/" + id, {method: 'GET'});
+            usuario = JSON.parse(await user.text());
+        }
         document.getElementById('insertar').innerHTML =`
             <div class="row justify-content-md-center"
                 <div class="card col-md-4" id="product-form">
@@ -112,7 +117,7 @@ window.Usuarios = class Usuarios {
     }
 
     static async estado(id, state) {
-        const modal = new Modal('¿Seguro desea cambiar el estado?')
+        const modal = new Modal('ESTADO USUARIO', '¿Seguro desea cambiar el estado?')
         const acept = await modal.confirm();
         if (acept) {
             const body = { state }
