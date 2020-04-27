@@ -22,6 +22,11 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
         required: true
+    },
+    img: {
+        type: String,
+        default: 'avatar.jpg',
+        required: true
     }
 });
 

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../model/user');
+const path = require('path');
+const fs = require('fs-extra');
 
 router.get('/', (req, res) => {
     res.render('users/users');
@@ -55,6 +57,28 @@ router.post('/newpass/:id', async (req, res) => {
         }
     } else{
         res.json({message: 'Las password no coinciden',css: 'danger', redirect: 'remove'})
+    }
+})
+
+router.post('/avatar/:id', async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id)
+    const imagePath = req.file.path;
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const targetPath = path.resolve(`src/public/img/${id}${ext}`);
+
+    if(user.img !== 'avatar.jpg'){
+        await fs.unlink(path.resolve('./src/public/img/' + user.img));
+    }
+
+    if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.gif') {
+        await fs.rename(imagePath, targetPath);
+        const nombArch = id + ext;
+        await user.updateOne({ img: nombArch });
+        res.json({ message: 'Imagen ingresada de forma correcta', css: 'success', redirect: '/profile' });
+    } else {
+        await fs.unlink(imagePath);
+        res.json({ message: 'Imagen no soportada', css: 'danger', redirect: '/profile' });
     }
 })
 
