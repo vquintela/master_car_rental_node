@@ -18,6 +18,11 @@ p {
     background-repeat: no-repeat;
 }
 
+.linea {
+	border-right: 2px solid black;
+	height: 150px;
+}
+
 /*Modal fade*/
 .mascara {
     display: none; 
@@ -61,7 +66,6 @@ p {
 	text-align: left;
 	font: normal 16px sans-serif;
 	padding: 45px 50px;
-    margin-top: 80px;
 }
 
 .footer-distributed .footer-left p{
@@ -105,6 +109,12 @@ p {
 	text-align: center;
 	line-height: 35px;
 	margin-left: 3px;
+}
+
+@media (max-width: 767px) {
+	.linea {
+		display: none;
+	}
 }
 
 @media (max-width: 600px) {
