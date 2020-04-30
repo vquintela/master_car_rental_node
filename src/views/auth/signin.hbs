@@ -1,29 +1,31 @@
-<div class="container p-4" id="contenedor">
-    <div class="row" id="App">
-        <div class="col-md-4 mx-auto">
-            <div class="card text-center">
-                <div class="card-header">
-                    <h3>INGRESO</h3>
-                </div>
-                <div class="card-body">
-                    <img src="img/car-logo.png" alt="Logo" class="card-img-top mx-auto m-2 rounded-circle w-50">
-                    <form>
-                        <div class="form-group">
-                            <input type="text" id="email" placeholder="Email" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <input type="password" id="password" placeholder="Password" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <input class="btn btn-success btn-block" value="Ingresa" id="btn-ingresa" readonly>
-                        </div>
-                        <div class="form-group">
-                            <a href="#" onclick="IngUsuario.renew();">¿Olvido su contraseña?</a>
-                        </div>
-                    </form>
+<header class="masthead-signin">
+    <div class="container p-4" id="contenedor">
+        <div class="row justify-content-md-end" id="App">
+            <div class="col-md-4">
+                <div class="card text-center back-signin">
+                    <div class="card-header">
+                        <h3 class="text-white">INGRESO</h3>
+                    </div>
+                    <div class="card-body">
+                        <img src="img/car-logo.svg" alt="Logo" class="card-img-top mx-auto m-2 w-50">
+                        <form>
+                            <div class="form-group">
+                                <input type="text" id="email" placeholder="Email" class="form-control bg-transparent">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" id="password" placeholder="Password" class="form-control bg-transparent">
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-success btn-block" value="Ingresa" id="btn-ingresa" readonly>
+                            </div>
+                            <div class="form-group">
+                                <a href="#" onclick="IngUsuario.renew();">¿Olvido su contraseña?</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</header>
 <script type="module" src="js/signin.js"></script>
