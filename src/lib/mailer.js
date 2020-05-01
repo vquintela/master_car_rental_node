@@ -45,4 +45,24 @@ mailer.renew = async (email, nombre, apellido, password) => {
     });
 }
 
+mailer.contacto = async (mail) => {
+    const ret = await transporter.sendMail({
+        from: direccion,
+        to: mail.email, 
+        cc: direccion,
+        subject: 'Gracias por contactarse con MANEJATE',
+        html:`
+            <h3><b>Manejate</b></h3><br><br>
+            <h3><b>Gracias por comunicarte con Manejate, en breve nos pondremos en contacto!</h3><br><br>
+            <p>Su mensaje fue:</p><br><br><br>
+            <p>Nombre y Apellido: ${mail.nombre}</p><br>
+            <p>Motivo de contacto: ${mail.contacto}</p><br>
+            <p>Su email: ${mail.email}</p><br>
+            <p>Su comentario: ${mail.comentario}</p><br><br><br>
+            <p>Este es un mail generado de forma automatica, no lo responda!</p>
+        `
+    })
+    return ret
+}
+
 module.exports = mailer;

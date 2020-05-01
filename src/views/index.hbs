@@ -12,7 +12,7 @@
 <div class="container text-center mt-5">
     <h1 class="font-weight-bold font-italic">Nuestros Vehículos</h1>
     <div class="row mt-5 mb-5 justify-content-md-around">
-        <div class="card border-0" style="width: 18rem;">
+        <div class="card border-0 mt-2" style="width: 18rem;">
             <img class="card-img-top" src="img/utilitario.png" alt="Card image cap">
             <div class="card-body mt-2">
                 <h5 class="card-title">Para toda la Familia</h5>
@@ -21,7 +21,7 @@
                 <a href="#" class="btn btn-primary">Reservalo YA!</a>
             </div>
         </div>
-        <div class="card border-0" style="width: 18rem;">
+        <div class="card border-0 mt-2" style="width: 18rem;">
             <img class="card-img-top" src="img/peugeot.png" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">Para el Trabajo</h5>
@@ -30,7 +30,7 @@
                 <a href="#" class="btn btn-primary">Reservalo YA!</a>
             </div>
         </div>
-        <div class="card border-0" style="width: 18rem;">
+        <div class="card border-0 mt-2" style="width: 18rem;">
             <img class="card-img-top" src="img/camioneta.png" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">Para Turista</h5>
@@ -115,24 +115,29 @@
             <div class="col-md-4">
                 <form>
                     <div class="form-group">
-                        <input type="text" class="form-control border-0" id="exampleInputPassword1" placeholder="Nombre y Apellido">
+                        <input type="text" class="form-control border-0" id="nombre" placeholder="Nombre y Apellido">
+                        <span id="errorNombre"></span>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control border-0" id="exampleInputPassword1" placeholder="Motivo Contacto">
+                        <input type="text" class="form-control border-0" id="contacto" placeholder="Motivo Contacto">
+                        <span id="errorContacto"></span>
                     </div>
                     <div class="form-group">
-                        <input type="email" class="form-control border-0" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        <input type="email" class="form-control border-0" id="email" aria-describedby="emailHelp"
                             placeholder="Email">
+                        <span id="errorEmail"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary border-0 rounded-0">Contactar</button>
+                    <input value="Contactar" onclick="Index.contacto();" class="btn btn-primary border-0 btn-block mb-3" readonly/>
                 </form>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <textarea class="form-control border-0" rows="8" id="comentario" name="comentario" aria-describedby="comentario"
                         placeholder="Comentario" required></textarea>
+                        <span id="errorComentario"></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script type="module" src="js/index.js"></script>
