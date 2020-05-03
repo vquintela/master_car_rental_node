@@ -11,15 +11,19 @@ window.Automovil = class Automovil {
                     <form class="card-body" id="formulario">
                         <div class="form-group">
                             <input type="text" id="patente" ${ auto ? 'value=' + auto.patente.toString() : 'placeholder="Patente"'} class="form-control">
+                            <span id="patenteError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="pasajeros" ${ auto ? 'value=' + auto.pasajeros.toString() : 'placeholder="Pasajeros"'} class="form-control">
+                            <input type="number" id="pasajeros" ${ auto ? 'value=' + auto.pasajeros.toString() : 'placeholder="Pasajeros"'} class="form-control">
+                            <span id="pasajerosError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="puertas" ${ auto ? 'value=' + auto.puertas.toString() : 'placeholder="Puertas"'} class="form-control">
+                            <input type="number" id="puertas" ${ auto ? 'value=' + auto.puertas.toString() : 'placeholder="Puertas"'} class="form-control">
+                            <span id="puertasError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="precio" ${ auto ? 'value=' + auto.precio.toString() : 'placeholder="Precio"'} class="form-control">
+                            <input type="number" id="precio" ${ auto ? 'value=' + auto.precio.toString() : 'placeholder="Precio"'} class="form-control">
+                            <span id="precioError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <select id="marca" class="form-control">
@@ -29,8 +33,9 @@ window.Automovil = class Automovil {
                                 <option>volkswagen</option>
                                 <option>chevrolet</option>
                             </select>
+                            <span id="marcaError" class="text-danger"></span>
                         </div>
-                        <input value="Ingresar" class="btn btn-primary" ${ auto ? `onclick="Automovil.insertar('${auto._id}', '${auto.imagen}');"` : 'onclick="Automovil.insertar();"'} readonly>
+                        <input value="Ingresar" class="btn btn-primary btn-block" ${ auto ? `onclick="Automovil.insertar('${auto._id}', '${auto.imagen}');"` : 'onclick="Automovil.insertar();"'} readonly>
                     </form>
                 </div>
                 <div class="col-md-4">
@@ -41,12 +46,15 @@ window.Automovil = class Automovil {
                                 <option>manual</option>
                                 <option>automatica</option>
                             </select>
+                            <span id="transmicionError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="text" id="descripcion" ${ auto ? 'value=' + auto.descripcion.toString() : 'placeholder="Descripcion"'} class="form-control">
+                            <span id="descripcionError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="text" id="modelo" ${ auto ? 'value=' + auto.modelo.toString() : 'placeholder="Modelo"'} class="form-control">
+                            <span id="modeloError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="file" id="imagen" class="form-control-file">
@@ -83,8 +91,12 @@ window.Automovil = class Automovil {
             })
             mensaje = JSON.parse(await text.text());
         }
-        message.showMessage(mensaje.message, mensaje.css, mensaje.redirect);
-        Automovil.obtener()
+        if(mensaje.redirect === 'error') {
+            message.errorMessage(mensaje.message)
+        } else {
+            message.showMessage(mensaje.message, mensaje.css, mensaje.redirect);
+            Automovil.obtener()   
+        }
     }
 
     static async obtener() {

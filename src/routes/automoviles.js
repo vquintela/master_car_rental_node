@@ -3,6 +3,7 @@ const router = express.Router();
 const Automovil = require('../model/automovil');
 const path = require('path');
 const fs = require('fs-extra');
+const errorMessage = require('../lib/errorMessageValidation');
 
 router.get('/', (req, res) => {
     res.render('automoviles/automoviles');
@@ -11,7 +12,14 @@ router.get('/', (req, res) => {
 router.post('/insertar', async (req, res) => {
     const { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo } = req.body;
     const automovil = new Automovil({ patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo });
-    const resp = await automovil.save();
+    let resp = null;
+    try {
+        resp = await automovil.save();
+    } catch (error) {
+        const mensaje = errorMessage.crearMensaje(error);
+        res.json({message: mensaje, redirect: 'error'})
+        return;
+    }
     if(req.file) {
         const imagePath = req.file.path;
         const ext = path.extname(req.file.originalname).toLowerCase();
@@ -52,23 +60,41 @@ router.post('/editar/:id', async (req, res) => {
         if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.gif') {
             await fs.rename(imagePath, targetPath);
             const imagen = req.params.id + ext;
-            await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo, imagen });
-            res.json({message: 'Automovil actualizado de forma correcta', css: 'success', redirect: 'remove'});
+            try {
+                await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo, imagen });
+                res.json({message: 'Automovil actualizado de forma correcta', css: 'success', redirect: 'remove'});
+            } catch (error) {
+                const mensaje = errorMessage.crearMensaje(error);
+                res.json({message: mensaje, redirect: 'error'})
+                return;
+            }
         } else {
             await fs.unlink(imagePath);
-            await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo});
-            res.json({message: 'Automovil actualizado, imagen no soportada', css: 'danger', redirect: 'remove'});
+            try {
+                await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo}, { runValidators: true });
+                res.json({message: 'Automovil actualizado, imagen no soportada', css: 'danger', redirect: 'remove'});
+            } catch (error) {
+                const mensaje = errorMessage.crearMensaje(error);
+                res.json({message: mensaje, redirect: 'error'})
+                return
+            }
         }
     } else {
-        await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo });
-        res.json({message: 'Automovil actualizado de forma correcta', css: 'success', redirect: 'remove'});
+        try {
+            await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo }, { runValidators: true });
+            res.json({message: 'Automovil actualizado de forma correcta', css: 'success', redirect: 'remove'});
+        } catch (error) {
+            const mensaje = errorMessage.crearMensaje(error);
+            res.json({message: mensaje, redirect: 'error'})
+            return
+        }
     }  
 })
 
 router.post('/delete/:id', async (req, res) => {
     const { id } = req.params;
     const { imagen } = req.body;
-    if(imagen !== 'sinimagen') {
+    if(imagen !== 'sinimagen.png') {
         await fs.unlink(path.resolve('./src/public/img/' + imagen));
     }
     await Automovil.findByIdAndDelete(id);

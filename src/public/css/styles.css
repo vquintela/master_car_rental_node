@@ -23,6 +23,11 @@ p {
 	height: 150px;
 }
 
+/*SUCURSALES*/
+.bg-sucursales {
+	background-color: #aaaaaa;
+}
+
 /*SIGNIN SIGNUP*/
 .masthead-signin {
 	height: 100vh;

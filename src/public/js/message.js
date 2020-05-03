@@ -20,6 +20,14 @@ class message {
         document.getElementById('formulario-titulo').remove();
         document.getElementById('formulario').remove();
     }
+
+    static errorMessage(errors) {
+        document.querySelectorAll('.text-danger').forEach(span => span.innerHTML = '');
+        errors.forEach(error => {
+            const [key, value] = error.split(':').map(err => err.trim())
+            document.getElementById(`${key}Error`).innerHTML = value.toString()
+        })
+    }
 }
 
 class Modal {
