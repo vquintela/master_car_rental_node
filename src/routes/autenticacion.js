@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const User = require('../model/user');
 const mailer = require('../lib/mailer');
+const errorMessage = require('../lib/errorMessageValidation');
 
 router.get('/signin', (req, res) => {
     res.render('auth/signin');
@@ -51,16 +52,20 @@ router.post('/signup', async (req, res) => {
     if(password !== verificarPassword) {
         return res.json({message: 'Las contraseñas no coinciden', css: 'danger', redirect: '/signup'});
     }
-    const emailUser = await User.findOne({email: email});
-    if(emailUser) {
-        return res.json({message: 'Email en uso, ingrese otro', css: 'danger', redirect: '/signup'});
-    } else {
-        const newUser = new User({nombre, apellido, email, password});
-        newUser.password = await newUser.encryptPassword(password);
-        newUser.numAut = await newUser.genPass();
+    const newUser = new User({nombre, apellido, email, password});
+    if(!newUser.validatePass(password)) {
+        return res.json({message: 'Las contraseña no cumple los requisitos', css: 'danger', redirect: '/signup'});
+    }
+    newUser.password = await newUser.encryptPassword(password);
+    newUser.numAut = await newUser.genPass();
+    try {
         await newUser.save();
         mailer.signup(newUser.email ,newUser.nombre, newUser.apellido, newUser.numAut);
         return res.json({message: 'Usuario Registrado, verifique su email para terminar', css: 'success', redirect: '/signin'});
+    } catch (error) {
+        const mensaje = errorMessage.crearMensaje(error);
+        res.json({message: mensaje, redirect: 'error'})
+        return;
     }
 });
 

@@ -61,7 +61,7 @@ router.post('/editar/:id', async (req, res) => {
             await fs.rename(imagePath, targetPath);
             const imagen = req.params.id + ext;
             try {
-                await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo, imagen });
+                await Automovil.findByIdAndUpdate({_id: req.params.id}, { patente, pasajeros, puertas, precio, marca, transmicion, descripcion, modelo, imagen }, { runValidators: true });
                 res.json({message: 'Automovil actualizado de forma correcta', css: 'success', redirect: 'remove'});
             } catch (error) {
                 const mensaje = errorMessage.crearMensaje(error);

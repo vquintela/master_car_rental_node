@@ -27,6 +27,10 @@ window.AltaUsuario = class AltaUsuario {
             body: usuarioJSON
         });
         const res = JSON.parse(await add.text());
-        message.showMessage(res.message, res.css, res.redirect);
+        if(res.redirect === 'error') {
+            message.errorMessage(res.message)
+        } else {
+            message.showMessage(res.message, res.css, res.redirect);
+        }
     }
 }

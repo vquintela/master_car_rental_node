@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../model/user');
 const path = require('path');
 const fs = require('fs-extra');
+const errorMessage = require('../lib/errorMessageValidation');
 
 router.get('/', (req, res) => {
     res.render('users/users');
@@ -15,7 +16,10 @@ router.get('/obtener', async (req, res) => {
 
 router.delete('/delete/:id', async (req, res) => {
     const { id } = req.params;
-    await User.findByIdAndDelete(id);
+    const resp = await User.findByIdAndDelete(id);
+    if(resp.img != 'avatar.jpg') {
+        await fs.unlink(path.resolve('./src/public/img/' + resp.img));
+    }
     res.json({message: 'Usuario eliminado de forma correcta', css: 'success', redirect: 'remove'});
 });
 
@@ -27,8 +31,14 @@ router.get('/editar/:id', async (req, res) => {
 
 router.post('/editar/:id', async (req, res) => {
     const { nombre, apellido, email, rol } = req.body;
-    await User.findByIdAndUpdate({_id: req.params.id}, { nombre, apellido, email, rol });
-    res.json({message: 'Usuario actualizado de forma correcta', css: 'success', redirect: 'remove'});
+    try {
+        await User.findByIdAndUpdate({_id: req.params.id}, { nombre, apellido, email, rol }, { runValidators: true });
+        res.json({message: 'Usuario actualizado de forma correcta', css: 'success', redirect: 'remove'});
+    } catch (error) {
+        const mensaje = errorMessage.crearMensaje(error);
+        res.json({message: mensaje, redirect: 'error'})
+        return;
+    }
 });
 
 router.put('/estado/:id', async (req, res) => {

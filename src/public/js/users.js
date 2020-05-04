@@ -75,12 +75,15 @@ window.Usuarios = class Usuarios {
                         </div>
                         <div class="form-group mt-4">
                             <input type="text" id="nombre" value="${usuario.nombre}" class="form-control">
+                            <span id="nombreError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="text" id="apellido" value="${usuario.apellido}" class="form-control">
+                            <span id="apellidoError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="text" id="email" value="${usuario.email}" class="form-control">
+                            <span id="emailError" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <select name="rol" id="rol" class="form-control">
@@ -89,6 +92,7 @@ window.Usuarios = class Usuarios {
                                 <option>operador</option>
                                 <option>cliente</option>
                             </select>
+                            <span id="rolError" class="text-danger"></span>
                         </div>
                         <input value="Editar" class="btn btn-primary btn-block" onclick="Usuarios.editar('${usuario._id}');">
                     </form>
@@ -111,9 +115,12 @@ window.Usuarios = class Usuarios {
             body: userJSON
         });
         const datotexto = JSON.parse(await add.text());
-        message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
-        Usuarios.obtenerUsuarios();
-        message.resetForm();
+        if(datotexto.redirect === 'error') {
+            message.errorMessage(datotexto.message)
+        } else {
+            message.showMessage(datotexto.message, datotexto.css, datotexto.redirect);
+            Usuarios.obtenerUsuarios();
+        }
     }
 
     static async estado(id, state) {
